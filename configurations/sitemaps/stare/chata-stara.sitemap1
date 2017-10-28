@@ -1,0 +1,68 @@
+sitemap demo label="Chata"
+{
+
+Frame{
+Group item=duzy_pokoj label="Duzy pokoj" icon="sofa"
+Group item=maly_pokoj label="Maly pokoj" icon="room"
+Group item=kuchnia    label="Kuchnia"    icon="kitchen"
+Group item=korytarz   label="Korytarz"   icon="corridor"
+Group item=kibel      label="Latryna"    icon="bath"
+Group item=balkon     label="Balkon"     icon="garden"
+Group item=tv         label="TV"         icon="video"
+}
+
+
+
+Frame label="Korytarz" {
+Text item=k_czuj_1
+}
+
+Frame label="Data"{
+Text item=dataczas
+}
+
+Frame label="Wylacznik czasowy"{
+Text label="Wylacznik" icon="moon"{
+Frame label="Kiedy?" {
+Setpoint item=wylgodz minValue=0 maxValue=23 step=1
+Setpoint item=wylmin minValue=0 maxValue=55 step=5
+Switch item=ustawspanie
+}
+Frame label="Co wylaczyc?"{
+Switch item=spanie1
+Switch item=spanie2
+Switch item=spanie3
+Switch item=spanie4
+}
+}
+}
+
+Frame label="Budzik"{
+Text label="Budzik" icon="sun"{
+Frame label="Na ktora?" {
+Setpoint item=wlgodz minValue=0 maxValue=23 step=1
+Setpoint item=wlmin minValue=0 maxValue=55 step=5
+Switch item=ustawbudzik
+}
+//Frame label="Od czego zaczac?"{
+//Switch item=pobudka1
+//Switch item=pobudka2
+//Switch item=pobudka3
+//}
+}
+}
+
+Frame label="Kontrola glosnosci"{
+Switch item=volup label="Volume up" mappings=[1="+1", 2="+5", 3="+10"]
+Switch item=voldn label="Volume down" mappings=[4="-1", 5="-5", 6="-10"]
+}
+
+Frame label="Scena"{
+Selection item=scena label="Ustawienia sceny" mappings=[1="pawsinoga", 2="pececiarz", 3="spioszek", 4="meloman", 5="telewidz"]
+}
+
+Frame label="Dzien i noc"{
+Switch item=wschod
+Switch item=security
+}
+}

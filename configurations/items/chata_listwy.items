@@ -1,0 +1,14 @@
+Switch          lis_lcd         "Monitor"                                       <monitor>       (All)           {mqtt=">[broker:lis/lcd:command:off:OFF],>[broker:lis/lcd:command:on:ON],<[broker:lis/lcd/status:state:default]"}
+
+Switch          lis_speak       "Glosniki"                                      <speakers>      (All)           {mqtt=">[broker:lis/speak:command:off:OFF],>[broker:lis/speak:command:on:ON],<[broker:lis/speak/status:state:default]"}
+
+Switch          lis_amp         "Amplituner"                                    <speakers>      (All)           {mqtt=">[broker:lis/amp:command:off:OFF],>[broker:lis/amp:command:on:ON],<[broker:lis/amp/status:state:default]"}
+
+Switch          lis_sub         "Subwoofer"                                     <speakers>      (All)           {mqtt=">[broker:lis/sub:command:off:OFF],>[broker:lis/sub:command:on:ON],<[broker:lis/sub/status:state:default]"}
+
+Switch          lis_etc         "Listwa 5"                                      <switch>        (All)           {mqtt=">[broker:lis/etc:command:off:OFF],>[broker:lis/etc:command:on:ON],<[broker:lis/etc/status:state:default]"}
+
+Switch          but_pc          "Komputer"                                      <pc>            (All)           {mqtt=">[broker:pcCMD:command:off:PCOFF],>[broker:pcCMD:command:on:PCON],<[broker:pcCMD/status:state:default]"}
+
+Switch          but_tv          "TV"                                            <tv>            (All)           {mqtt=">[broker:pilot/amp:command:off:TV],>[broker:pilot/amp:command:on:TV],<[broker:lis/tv/status:state:default]"}
+

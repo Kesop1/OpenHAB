@@ -1,0 +1,13 @@
+Number          wylgodz         "Godziny [%d]"                                  <clock>         (wylacznik)
+
+Number          wylmin          "Minuty [%d]"                                   <clock>         (wylacznik)
+
+String          wylczas         "%s"
+
+Switch          ustawspanie     "Ustaw timer"                                   <bedroom>       (wylacznik)
+
+Switch          spij_pc         "PC"                                            <pc>            (wylacznik)
+
+Switch          spij_tv         "TV"                                            <tv>            (wylacznik)
+
+

@@ -1,0 +1,50 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.openhab.library.tel.types.CallType
+import org.openhab.core.transform.actions.Transformation
+import org.joda.time.*
+import java.lang.Double
+import java.lang.Math.*
+import java.util.Date
+import org.openhab.core.library.types.DecimalType
+import org.openhab.action.squeezebox.*
+import java.util.concurrent.locks.ReentrantLock
+
+//timery
+//wylaczanie
+var Timer timer1 = null
+var Timer timer2 = null
+//budzik
+var Timer timer3 = null
+var Timer timer4 = null
+var Timer timer5 = null
+//budzik praca
+var Timer timer6 = null
+var Timer timer7 = null
+var Timer timer8 = null
+var Timer timer9 = null
+var Timer timer10 = null
+var Timer timer11 = null
+
+
+//**************************************************************************************//
+
+rule "Poczatek"
+ when
+   System started
+ then
+     postUpdate(wylgodz, 1)
+     postUpdate(wylmin, 0)
+     postUpdate(wlgodz, 8)
+     postUpdate(wlmin, 20)
+     postUpdate(wlgodz_praca, 7)
+     postUpdate(wlmin_praca, 25)
+     postUpdate(wylczas, "-")
+     postUpdate(wlczas, "-")
+     postUpdate(wlczas_praca, "-")
+     postUpdate(wolne, OFF)
+ end
+
+
+//**************************************************************************************//

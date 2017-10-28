@@ -1,0 +1,15 @@
+Number          wlgodz_praca    "Godziny [%d]"                                  <clock>         (budzik_praca)
+
+Number          wlmin_praca     "Minuty [%d]"                                   <clock>         (budzik_praca)
+
+Switch          budzik1_praca   "Ustaw pobudke"                                 <bedroom>       (budzik_praca)
+
+String          wlczas_praca     "%s"
+
+Switch          wolne           "Jutro wolne"
+
+Number          radio_praca                                                     <scena>         (budzik_praca)
+
+Switch          pcON_praca            "Wlaczyc PC?"
+
+

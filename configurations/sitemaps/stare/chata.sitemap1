@@ -1,0 +1,92 @@
+sitemap demo label="Chata"
+{
+
+Frame{
+Switch item=lis_lcd
+Switch item=lis_speak
+Switch item=lis_amp
+Switch item=lis_sub
+Switch item=but_pc
+}
+/*
+////////////////////////////////////////////////////
+
+Frame label="Wylacznik czasowy"{
+Text label="Wylacznik [%s]" item=wylczas icon="moon"{
+Frame label="Kiedy?" {
+Setpoint item=wylgodz minValue=0 maxValue=23 step=1
+Setpoint item=wylmin minValue=0 maxValue=55 step=5
+Switch item=ustawspanie
+}
+Frame label="Co wylaczyc?"{
+
+Switch item=spij_pc
+Switch item=spij_tv
+
+}
+}
+}
+
+//////////////////////////////////////////////////
+*/
+Frame label="Logger" {
+//Text item=dataczas
+Text item=czuj_temp
+Text item=czuj_wilg
+//Switch item=wschod
+}
+/*
+////////////////////////////////////////////////
+
+Frame label="Arbeit"{
+Text label="Praca [%s]" item= wlacz_praca icon="sun"{
+Frame label="Na ktora?" {
+Setpoint item=wlgodz_praca minValue=0 maxValue=23 step=1
+Setpoint item=wlmin_praca minValue=0 maxValue=55 step=5
+Switch item=budzik1_praca
+Switch item=wolne
+Selection item=scena_praca label="Playlista" mappings=[1="Trojka", 2="UWM FM", 3="Led Zeppelin", 4="Losowo"]
+}
+}
+}
+
+///////////////////////////////////////////////
+
+Frame label="Budzik"{
+Text label="Budzik [%s]" item=wlczas icon="sun"{
+Frame label="Na ktora?" {
+Setpoint item=wlgodz minValue=0 maxValue=23 step=1
+Setpoint item=wlmin minValue=0 maxValue=55 step=5
+Switch item=budzik1
+//Selection item=scena label="Playlista" mappings=[1="Trojka", 2="UWM FM", 3="Led Zeppelin", 4="Losowo"]
+}
+}
+}
+
+//////////////////////////////////////////////
+
+Frame label="Kontrola glosnosci"{
+Switch item=volup label="Volume up" mappings=[1="+1", 2="+5", 3="+10"]
+Switch item=voldn label="Volume down" mappings=[4="-1", 5="-5", 6="-10"]
+}
+
+/////////////////////////////////////////////
+
+Frame label="Scena"{
+//Selection item=scena label="Ustawienia sceny" mappings=[1="pawsinoga", 2="pececiarz", 3="Mecz", 4="Film", 5="Ksiazka"]
+}
+
+///////////////////////////////////////////
+
+Frame label="Radio"{
+//Selection item=scena_praca label="Playlista" mappings=[1="Trojka", 2="UWM FM", 3="Led Zeppelin", 4="Losowo"]
+}
+
+/////////////////////////////////////////
+
+Frame label="Weed"{
+//Text item=plant1
+//Text item=plant2
+//Text item=plant3
+}*/
+}

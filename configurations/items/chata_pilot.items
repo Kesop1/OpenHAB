@@ -1,0 +1,9 @@
+Number          volume
+
+String		vol_send		{mqtt=">[broker:volume:command:*:default]"}
+
+String		pilot_amp		{mqtt=">[broker:pilot/amp:command:*:default]"}
+
+Number          pilot_rcv               {mqtt="<[broker:pilot/rcv:state:default]"}
+
+Switch          but_tv          "TV"                                            <tv>            (All)           {mqtt=">[broker:pilot/amp:command:off:TV],>[broker:pilot/amp:command:on:TV],<[broker:lis/tv/status:state:default]"}

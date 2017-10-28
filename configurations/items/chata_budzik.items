@@ -1,0 +1,12 @@
+Number          wlgodz          "Godziny [%d]"                                  <clock>         (budzik)
+
+Number          wlmin           "Minuty [%d]"                                   <clock>         (budzik)
+
+Switch          budzik1         "Ustaw pobudke"                                 <bedroom>       (budzik)
+
+Number          radio_budzik                                                    <scena>         (budzik)
+
+String          wlczas          "%s"
+
+Switch          pcON            "Wlaczyc PC?"
+

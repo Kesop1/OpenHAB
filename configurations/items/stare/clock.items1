@@ -1,0 +1,11 @@
+Number alarmgodziny "Godziny [%d]" <clock> (alarm)
+Number alarmminuty  "Minuty [%d]"  <clock> (alarm)
+Switch button "Button"
+DateTime    Date    "Date [%1$tA, %1$td.%1$tm.%1$tY]"   (Status)    { ntp="" }
+DateTime itm_uber1_gas_time "Gas Alarm Time [%1$tA, %1$tm/%1$td, %1$tI:%1$tM %1$tp]"
+DateTime itm_mailbox_time "Mailbox Last Updated [%1$tA, %1$tm/%1$td, %1$tI:%1$tM %1$tp]"
+DateTime System_Time            "System Time [%1$tA, %1$td.%1$tm.%1$tY %1$tH:%1$tM]"    <clock>
+
+Switch itm_mousetrap_basement_trap_sta "Basement Trap Status" <switch>
+DateTime itm_mousetrap_basement_time "Trap Time [%1$tA, %1$tm/%1$td, %1$tI:%1$tM %1$tp]"
+DateTime SystemTime "Current time [%1$tT %1$tA, %1$td.%1$tm.%1$tY]"

@@ -1,0 +1,71 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.openhab.library.tel.types.CallType
+import org.openhab.core.transform.actions.Transformation
+import org.joda.time.*
+import java.lang.Double
+import java.lang.Math.*
+import java.util.Date
+
+rule "rob"
+when
+    Item button changed to ON
+then
+    if(now.getHourOfDay < 18) {
+        say(receivedCommand)
+    }
+end
+
+rule "Uber flame response"
+        when
+                Item itm_uber1_gas_alm_sta received update
+        then
+                sendMail("koniczyna69@gmail.com", "fire detected" , "fire detected")
+                //playSound("ding.mp3")
+                postUpdate(itm_uber1_gas_time, new DateTimeType()) 
+end
+
+rule "send email and talk"
+        when
+                Item button changed from OFF to ON
+        then
+              //  playSound("aolmail.mp3")
+                sendMail("koniczyna69@gmail.com", "subject line here", "email body text")
+end
+
+
+rule "update mailbox"
+        when
+                Item button received update
+        then
+               // endCommand(itm_mailbox, ON)
+                postUpdate(itm_mailbox_time, new DateTimeType()) 
+end
+
+rule "Clock"
+when
+    Time cron "* * * * * ?"
+then
+  postUpdate(System_Time, new DateTimeType())
+end 
+
+rule "Mouse Trap Basement Mouse Detected"
+	when
+		Item button received update
+	then
+		{       sendCommand(itm_mousetrap_basement_trap_sta, ON)
+			postUpdate(itm_mousetrap_basement_time, new DateTimeType())
+			sendMail("koniczyna69@gmail.com", "subject mouse trap" , "a mouse in trap!")
+			say("mouse in trap!")
+		}
+		
+end 
+
+rule "Get System time, and add some minutes"
+when
+Time cron "* * * * * ?"
+then
+postUpdate(SystemTime, new DateTimeType())
+
+end

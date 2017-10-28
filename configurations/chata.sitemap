@@ -1,0 +1,5 @@
+sitemap demo label="Chata"
+{
+ Frame label="Korytarz" {
+  Text item=Office_temp
+ }

@@ -1,0 +1,33 @@
+sitemap demo label="Main Menu"
+{
+ Frame label="MQTT" {
+ Switch item=mqttsw1 label="MQTT Switch 1"
+ Switch item=mqttsw2 label="MQTT Switch 2"
+ Switch item=lamp1 label="Office Lamp"
+ Text item=Office_temp
+ }
+Frame label="MQTT2" {
+ Switch item=mqttsw3 label="MQTT Switch 3"
+ Switch item=mqttsw4 label="MQTT Switch 4"
+
+ Switch item=mqttsw5 label="MQTT Switch 5"
+
+ }
+Frame label="Alarm" {
+    Text item=Alarm_MasterTime icon="presence-on" visibility=[Alarm_Master==ON] {
+        Frame label="Master Alarm" {
+            Switch item=Alarm_Master
+            Text item=Alarm_MasterTime
+            Setpoint item=Alarm_MasterTimeMins minValue=0 maxValue=600 step=5
+        }
+    }
+    Text item=Alarm_MasterTime icon="presence-off" visibility=[Alarm_Master==OFF] {
+        Frame label="Master Alarm" {
+            Switch item=Alarm_Master
+            Text item=Alarm_MasterTime
+            Setpoint item=Alarm_MasterTimeMins minValue=0 maxValue=600 step=5
+        }
+    }
+}
+}
+

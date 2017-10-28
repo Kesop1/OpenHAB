@@ -1,0 +1,287 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.openhab.library.tel.types.CallType
+import org.openhab.core.transform.actions.Transformation
+import org.joda.time.*
+import java.lang.Double
+import java.lang.Math.*
+import java.util.Date
+import org.openhab.core.library.types.DecimalType
+import org.openhab.action.squeezebox.*
+import java.util.concurrent.locks.ReentrantLock
+
+//timery
+var Timer timer1 = null
+var Timer timer2 = null
+var Timer timer3 = null
+var Timer timer4 = null
+var Timer timer5 = null
+
+rule "Pokaz date i czas"
+when
+Time cron "* * * * * ?"
+then
+postUpdate(dataczas, new DateTimeType())
+end
+
+rule "Poczatek"
+ when
+   System started
+ then
+     postUpdate(wylgodz, 1)
+     postUpdate(wylmin, 0)
+     postUpdate(wlgodz, 8)
+     postUpdate(wlmin, 0)
+ end
+
+rule "wylaczanie"
+when
+Item ustawspanie received command OFF
+then
+var int czaswyl
+czaswyl = (wylgodz.state as DecimalType).intValue * 60 + (wylmin.state as DecimalType).intValue
+czaswyl = czaswyl.intValue
+
+//jesli timer juz istnieje to go nadpisz
+if (timer1 != null) {
+timer1.cancel
+timer1 = null
+}
+logInfo("Wylaczanie","Wylaczanie ustawione na za " + czaswyl + " minut")
+
+timer1 = createTimer(now.plusMinutes(czaswyl))[|
+
+//wyslij komende OFF dla nadajnika IR
+if (spanie1.state==ON){
+sendCommand(pilot1, OFF)
+}
+if (spanie2.state==ON){
+sendCommand(pilot2, OFF)
+}
+if (spanie3.state==ON){
+sendCommand(pilot3, OFF)
+}
+if (spanie4.state==ON){
+sendCommand(d_io_1, OFF)
+}
+
+if (timer4 != null) {
+timer4.cancel
+timer4 = null
+}
+timer4 = createTimer(now.plusSeconds(10))[|
+//po 10 sekundach wlacz scene sen
+sendCommand(scena, 3)
+]
+]
+end
+
+rule "budzik"
+when
+Item ustawbudzik received command OFF
+then
+var int czaswl
+czaswl = (wlgodz.state as DecimalType).intValue * 60 + (wlmin.state as DecimalType).intValue
+czaswl = czaswl.intValue
+
+//okresl ile minut jest juz tego dnia
+var int terazczas
+terazczas = now.getMinuteOfDay
+terazczas = terazczas.intValue
+
+var int alarm
+alarm = czaswl - terazczas
+
+//jesli ustawiono na dzien nastepny
+if (alarm <0){
+alarm = alarm + 1440
+}
+logInfo("Pobudka","Pobudka ustawiona na za " + alarm + " minut")
+
+
+//jesli timer juz isnieje to nadpisz
+if (timer2 != null) {
+timer2.cancel
+timer2 = null
+}
+timer2 = createTimer(now.plusMinutes(alarm))[|
+logInfo("Pobudka","Pobudka ustawiona " + alarm + " minut temu")
+//wlacz listwy
+if (pobudka1.state==ON){
+sendCommand(d_lis_6, ON)
+}
+if (pobudka2.state==ON){
+sendCommand(d_lis_7, ON)
+}
+if (pobudka3.state==ON){
+sendCommand(d_lis_8, ON)
+}
+
+//jesli timer juz isnieje to nadpisz
+if (timer3 != null) {
+timer3.cancel
+timer3 = null
+}
+timer3 = createTimer(now.plusSeconds(10))[|
+
+//po 10 seknudach wlacz z nadajnika IR
+if (pobudka1.state==ON){
+sendCommand(pilot1, ON)
+}
+if (pobudka2.state==ON){
+sendCommand(pilot2, ON)
+}
+if (pobudka3.state==ON){
+sendCommand(pilot3, ON)
+}
+if (czuj_swiatla.state<500){
+sendCommand(d_io_1, ON)
+}
+]
+]
+end
+
+rule "volume"
+when
+Item pilotvol received update
+then
+if(pilotvol.state<=10){
+sendCommand(volume, 10)
+}
+if(pilotvol.state>10 &&  pilotvol.state<=20){
+sendCommand(volume, 20)
+}
+if(pilotvol.state>20 &&  pilotvol.state<=30){
+sendCommand(volume, 30)
+}
+if(pilotvol.state>30 &&  pilotvol.state<=40){
+sendCommand(volume, 40)
+}
+if(pilotvol.state>40 &&  pilotvol.state<=50){
+sendCommand(volume, 50)
+}
+if(pilotvol.state>50 &&  pilotvol.state<=60){
+sendCommand(volume, 60)
+}
+if(pilotvol.state>60 &&  pilotvol.state<=70){
+sendCommand(volume, 70)
+}
+if(pilotvol.state>70 &&  pilotvol.state<=80){
+sendCommand(volume, 80)
+}
+if(pilotvol.state>80 &&  pilotvol.state<=90){
+sendCommand(volume, 90)
+}
+if(pilotvol.state>90 &&  pilotvol.state<=100){
+sendCommand(volume, 100)
+}
+end
+
+rule "sceny"
+when
+Item scena received update
+then
+
+//scena 1=poza domem, wszystko OFF
+if(scena.state==1){
+logInfo("Scena","Ustawiono scene nr 1 - poza domem")
+sendCommand(pilot1, OFF)
+sendCommand(m_lis_1, OFF)
+sendCommand(m_lis_2, OFF)
+sendCommand(m_lis_3, OFF)
+sendCommand(m_lis_4, OFF)
+sendCommand(m_lis_5, OFF)
+sendCommand(d_lis_1, OFF)
+sendCommand(d_lis_2, OFF)
+sendCommand(d_lis_3, OFF)
+sendCommand(d_lis_4, OFF)
+sendCommand(d_lis_5, OFF)
+sendCommand(d_lis_6, OFF)
+sendCommand(d_lis_7, OFF)
+sendCommand(d_lis_8, OFF)
+sendCommand(d_lis_9, OFF)
+sendCommand(d_lis_10, OFF)
+sendCommand(d_io_1, OFF)
+sendCommand(k_io_1, OFF)
+sendCommand(q_io_1, OFF)
+}
+//scena 2=praca w domu, wszystko OFF poza sprzetami w malym pokoju
+if(scena.state==2){
+logInfo("Scena","Ustawiono scene nr 2 - praca w domu")
+sendCommand(m_lis_1, ON)
+sendCommand(m_lis_2, ON)
+sendCommand(m_lis_3, ON)
+sendCommand(m_lis_4, ON)
+//sendCommand(m_lis_5, ON)
+sendCommand(d_lis_2, OFF)
+sendCommand(d_lis_3, OFF)
+sendCommand(d_lis_4, OFF)
+sendCommand(d_lis_5, OFF)
+sendCommand(d_lis_7, OFF)
+sendCommand(d_lis_8, OFF)
+sendCommand(d_lis_9, OFF)
+sendCommand(d_lis_10, OFF)
+sendCommand(d_io_1, OFF)
+sendCommand(k_io_1, OFF)
+sendCommand(q_io_1, OFF)
+//jesli jest ciemno to wlacz tez swiatlo w pokoju
+if(czuj_swiatla.state>500){
+sendCommand(m_lis_5, OFF)
+}
+if(czuj_swiatla.state<500){
+sendCommand(m_lis_5, ON)
+}
+
+}
+
+//scena 3=sen, wszystko OFF poza ladowarka telefonu
+if(scena.state==3){
+logInfo("Scena","Ustawiono scene nr 3 - sen")
+sendCommand(m_lis_1, OFF)
+sendCommand(m_lis_2, OFF)
+sendCommand(m_lis_3, OFF)
+sendCommand(m_lis_4, OFF)
+sendCommand(m_lis_5, OFF)
+sendCommand(d_lis_1, OFF)
+sendCommand(d_lis_2, OFF)
+sendCommand(d_lis_3, OFF)
+sendCommand(d_lis_4, OFF)
+sendCommand(d_lis_5, ON)
+sendCommand(d_lis_6, OFF)
+sendCommand(d_lis_7, OFF)
+sendCommand(d_lis_8, OFF)
+sendCommand(d_lis_9, OFF)
+sendCommand(d_lis_10, OFF)
+sendCommand(d_io_1, OFF)
+sendCommand(k_io_1, OFF)
+sendCommand(q_io_1, OFF)
+}
+//scena 4=radio, wlacz listwe, amp i subwoofer
+if(scena.state==4){
+logInfo("Scena","Ustawiono scene nr 4 - radio")
+sendCommand(d_lis_6, ON)
+sendCommand(d_lis_1, ON)
+//jesli timer juz istnieje to go nadpisz
+if (timer5 != null) {
+timer5.cancel
+timer5 = null
+}
+timer5 = createTimer(now.plusSeconds(5))[|
+sendCommand(pilot1, ON)
+]
+}
+//scena 5=tv, wszystko OFF poza duzym pokojem
+if(scena.state==5){
+logInfo("Scena","Ustawiono scene nr 5 - tv")
+sendCommand(d_lis_1, ON)
+sendCommand(d_lis_6, ON)
+sendCommand(d_lis_7, ON)
+sendCommand(d_lis_8, ON)
+sendCommand(d_lis_9, ON)
+sendCommand(d_lis_10, ON)
+if (czuj_swiatla.state<500){
+sendCommand(d_io_1, ON)
+}
+}
+end

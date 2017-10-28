@@ -1,0 +1,117 @@
+Group All
+
+Group wylacznik  (All)
+Group budzik     (All)
+Group budzik_praca (All)
+Group tv         (All)
+Group led	 (All)
+Group plants	 (All)
+Group pc_but	 (All)
+
+Switch          lis_lcd         "Monitor"                                       <monitor>       (All)		{mqtt=">[broker:lis/lcd:command:off:OFF],>[broker:lis/lcd:command:on:ON],<[broker:lis/lcd/status:state:default]"}
+
+Switch          lis_speak       "Glosniki"                                      <speakers>      (All)		{mqtt=">[broker:lis/speak:command:off:OFF],>[broker:lis/speak:command:on:ON],<[broker:lis/speak/status:state:default]"}
+
+Switch          lis_amp	        "Amplituner"                                    <speakers>      (All)           {mqtt=">[broker:lis/amp:command:off:OFF],>[broker:lis/amp:command:on:ON],<[broker:lis/amp/status:state:default]"}
+
+Switch		lis_sub		"Subwoofer"					<speakers>      (All)           {mqtt=">[broker:lis/sub:command:off:OFF],>[broker:lis/sub:command:on:ON],<[broker:lis/sub/status:state:default]"}
+
+Switch          but_pc          "Komputer"                                      <pc>            (All)           {mqtt=">[broker:lis/pc:command:off:OFF]}
+
+Number          czuj_temp       "Temperatura [%s °C]"                          <temperature>   (All)	        {mqtt="<[broker:czuj/temp:state:default]"}
+
+Number          czuj_wilg       "Wilgotnosc [%s %%]"                            <water>         (All)	        {mqtt="<[broker:czuj/wilg:state:default]"}
+/*
+Switch          sen             "Idz spac"                                      <bedroom>                       {mqtt=">[broker:pilot:command:off:OFF]"}
+
+//DateTime        dataczas        "Data [%1$tT %1$tA, %1$td.%1$tm.%1$tY]"         <calendar>      (All)
+
+Number          wylgodz         "Godziny [%d]"                                  <clock>         (wylacznik)
+
+Number          wylmin          "Minuty [%d]"                                   <clock>         (wylacznik)
+
+Switch          ustawspanie     "Ustaw timer"                                   <bedroom>       (wylacznik)     {mqtt=">[broker:wylacznik:command:off:OFF],>[broker:wylacznik:command:on:ON],<[broker:wylacznik:state:default]"}
+
+Switch          spij_pc         "PC"                                            <pc>            (wylacznik)
+
+Switch          spij_tv         "TV" 	                                        <tv>	        (wylacznik)
+
+Number          wlgodz          "Godziny [%d]"                                  <clock>         (budzik)
+
+Number          wlmin           "Minuty [%d]"                                   <clock>         (budzik)
+
+Number          wlgodz_praca    "Godziny [%d]"                                  <clock>         (budzik_praca)
+
+Number          wlmin_praca     "Minuty [%d]"                                   <clock>         (budzik_praca)
+
+Switch          budzik1  	"Ustaw pobudke"                                 <bedroom>       (budzik)        {mqtt=">[broker:budzik:command:off:OFF],>[broker:budzik:command:on:ON],<[broker:budzik:state:default]"}
+
+Switch          budzik1_praca   "Ustaw pobudke"                                 <bedroom>       (budzik_praca)  {mqtt=">[broker:budzik_praca:command:off:OFF],>[broker:budzik_praca:command:on:ON],<[broker:budzik_praca:state:default]"}
+
+Number          scena                                                           <scena>         (budzik)        {mqtt=">[broker:budzik/muza:command:*:default]"}
+
+Number          scena_praca                                                     <scena>         (budzik_praca)  {mqtt=">[broker:budzik_praca/muza:command:*:default]"}
+
+//Dimmer          pc_vol          "PC Volume"                                     <volume>        (All)           {mqtt=">[broker:pilot/amp:command:ON:UP],>[broker:pilot/amp:command:OFF:DN]"}
+
+Number          volup                                                           <volup>                         {mqtt=">[broker:pilot/amp:command:*:default]"}
+
+Number          voldn                                                           <voldn>                         {mqtt=">[broker:pilot/amp:command:*:default]"}
+
+Number          scena                                                           <scena>                         {mqtt=">[broker:scena:command:*:default]"}
+
+Switch          wschod          "Wschod Slonca"                                 <sun>           (All)           
+
+String 		wylczas		"%s"
+
+String		wlacz_praca	"%s"
+
+String		wlczas		"%s"
+
+Switch		wolne		"Jutro wolne"
+
+Switch          but_up          "Button up"                                      	        (pc_but)        {mqtt=">[broker:but/up:command:off:OFF]"}
+
+Switch          but_dn          "Button down"                                                   (pc_but)        {mqtt=">[broker:but/dn:command:off:OFF]"}
+
+Switch          but_le          "Button left"                                                   (pc_but)        {mqtt=">[broker:but/le:command:off:OFF]"}
+
+Switch          but_ri          "Button right                                                   (pc_but)        {mqtt=">[broker:but/ri:command:off:OFF]"}
+
+Switch          but_1           "Button 1"                                                      (pc_but)        {mqtt=">[broker:but/1:command:off:OFF]"}
+
+Switch          but_2           "Button 2"                                                      (pc_but)        {mqtt=">[broker:but/2:command:off:OFF]"}
+
+Switch          but_3           "Button 3"                                                      (pc_but)        {mqtt=">[broker:but/3:command:off:OFF]"}
+
+Switch          but_4           "Button 4"                                                      (pc_but)        {mqtt=">[broker:but/4:command:off:OFF]"}
+
+Switch          but_r1          "Button r1"                                                     (pc_but)        {mqtt=">[broker:but/r1:command:off:OFF]"}
+
+Switch          but_r2          "Button r2"                                                     (pc_but)        {mqtt=">[broker:but/r2:command:off:OFF]"}
+
+Switch          but_l1          "Button l1"                                                     (pc_but)        {mqtt=">[broker:but/l1:command:off:OFF]"}
+
+Switch          but_l2          "Button l2"                                                     (pc_but)        {mqtt=">[broker:but/l2:command:off:OFF]"}
+
+//Dimmer 		led_br_1	"LED lampka"							(led)	    	{channel="milight:whiteLed:ACCF23A6C0B4:1:ledbrightness"}
+
+//Dimmer 		led_temp_1    	"LED lampka temp"						(led)		{channel="milight:whiteLed:ACCF23A6C0B4:1:colorTemperature"}
+
+//Dimmer          led_br_2        "LED gora"                                                      (led)           {channel="milight:whiteLed:ACCF23A6C0B4:2:ledbrightness"}
+
+//Dimmer          led_temp_2      "LED gora temp"                                                 (led)           {channel="milight:whiteLed:ACCF23A6C0B4:2:colorTemperature"}
+
+//Color 		led_kolor	"LED RGBW" 							(led)           {channel="milight:rgbwLed:ACCF23A6C0B4:1:ledcolor"}
+
+//Number 		led_sceny	"Sceny"								(led)
+
+//Color  		led_sceny_rgb 	"Wybor sceny"   				<colorwheel> 	(led)
+
+//Number  	plant1		"Roslinka 1 [MAP(lodowka.map):%s]"    		<plant>      	(plants)        {mqtt="<[broker:plant1:state:default]" }
+
+//Number          plant2          "Roslinka 2 [MAP(lodowka.map):%s]"              <plant>         (plants)        {mqtt="<[broker:plant2:state:default]" }
+
+//Number          plant3          "Roslinka 3 [MAP(lodowka.map):%s]"              <plant>         (plants)        {mqtt="<[broker:plant3:state:default]" }
+
+*/

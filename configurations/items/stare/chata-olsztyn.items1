@@ -1,0 +1,113 @@
+Group All
+
+Group duzy_pokoj (All)
+Group maly_pokoj (All)
+Group kuchnia    (All)
+Group korytarz   (All)
+Group kibel      (All)
+Group balkon     (All)
+Group wylacznik  (All)
+Group budzik     (All)
+Group tv         (All)
+
+Number          k_czuj_1        "Czujnik ruchu [MAP(motion.map):%s]"            <shield>        (korytarz)      {mqtt="<[broker:czuj/k/1:state:default]" }
+
+Switch          m_lis_1         "Monitor"                                       <monitor>       (maly_pokoj)    {mqtt=">[broker:lis/m/1:command:off:OFF],>[broker:lis/m/1:command:on:ON],<[broker:m_lis_1/status:state:default]"}
+
+Switch          m_lis_2         "Komputer"                                      <pc>            (maly_pokoj)    {mqtt=">[broker:lis/m/2:command:off:OFF],>[broker:lis/m/2:command:on:ON],<[broker:m_lis_2/status:state:default]"}
+
+Switch          m_lis_3         "Laptop"                                        <laptop>        (maly_pokoj)    {mqtt=">[broker:lis/m/3:command:off:OFF],>[broker:lis/m/3:command:on:ON],<[broker:m_lis_3/status:state:default]"}
+
+Switch          m_lis_4         "Glosniki"                                      <speakers>      (maly_pokoj)    {mqtt=">[broker:lis/m/4:command:off:OFF],>[broker:lis/m/4:command:on:ON],<[broker:m_lis_4/status:state:default]"}
+
+Switch          m_lis_5         "Swiatlo"                                       <switch>        (maly_pokoj)    {mqtt=">[broker:lis/m/5:command:off:OFF],>[broker:lis/m/5:command:on:ON],<[broker:m_lis_5/status:state:default]"}
+
+Number          czuj_temp       "Temperatura [%s °C]"                           <temperature>   (duzy_pokoj)    {mqtt="<[broker:czuj/d/1/temp:state:default]"}
+
+Number          czuj_wilg       "Wilgotnosc [%s %%]"                            <water>         (duzy_pokoj)    {mqtt="<[broker:czuj/d/1/wilg:state:default]"}
+
+Switch          d_lis_1         "Sub-woofer"                                    <speakers>      (duzy_pokoj)    {mqtt=">[broker:lis/d/1:command:off:OFF],>[broker:lis/d/1:command:on:ON],<[broker:d_lis_1/status:state:default]"}
+
+Switch          d_lis_2         "Listwa 2"                                      <socket>        (duzy_pokoj)    {mqtt=">[broker:lis/d/2:command:off:OFF],>[broker:lis/d/2:command:on:ON],<[broker:d_lis_2/status:state:default]"}
+
+Switch          d_lis_3         "Listwa 3"                                      <socket>        (duzy_pokoj)    {mqtt=">[broker:lis/d/3:command:off:OFF],>[broker:lis/d/3:command:on:ON],<[broker:d_lis_3/status:state:default]"}
+
+Switch          d_lis_4         "Listwa 4"                                      <socket>        (duzy_pokoj)    {mqtt=">[broker:lis/d/4:command:off:OFF],>[broker:lis/d/4:command:on:ON],<[broker:d_lis_4/status:state:default]"}
+
+Switch          d_lis_5         "Ladowarka"                                     <charger>       (duzy_pokoj)    {mqtt=">[broker:lis/d/5:command:off:OFF],>[broker:lis/d/5:command:on:ON],<[broker:d_lis_5/status:state:default]"}
+
+Switch          d_lis_6         "Amplituner"                                    <speakers>      (duzy_pokoj)    {mqtt=">[broker:lis/d/6:command:off:OFF],>[broker:lis/d/6:command:on:ON],<[broker:d_lis_6/status:state:default]"}
+
+Switch          d_lis_7         "TV"                                            <tv>            (duzy_pokoj)    {mqtt=">[broker:lis/d/7:command:off:OFF],>[broker:lis/d/7:command:on:ON],<[broker:d_lis_7/status:state:default]"}
+
+Switch          d_lis_8         "PS3"                                           <ps3>           (duzy_pokoj)    {mqtt=">[broker:lis/d/8:command:off:OFF],>[broker:lis/d/8:command:on:ON],<[broker:d_lis_8/status:state:default]"}
+
+Switch          d_lis_9         "DVB-T"                                         <dvb>           (duzy_pokoj)    {mqtt=">[broker:lis/d/9:command:off:OFF],>[broker:lis/d/9:command:on:ON],<[broker:d_lis_9/status:state:default]"}
+
+Switch          d_lis_10        "Antena"	                                <socket>        (duzy_pokoj)    {mqtt=">[broker:lis/d/10:command:off:OFF],>[broker:lis/d/10:command:on:ON],<[broker:d_lis_10/status:state:default]"}
+
+Number          czuj_temp1      "Temperatura [%s °C]"                          <temperature>   (balkon)        {mqtt="<[broker:czuj/b/1/temp:state:default]"}
+
+Number          czuj_wilg1      "Wilgotnosc [%s %%]"                            <water>         (balkon)        {mqtt="<[broker:czuj/b/1/wilg:state:default]"}
+
+Switch          d_io_1          "Swiatlo"                                       <switch>        (duzy_pokoj)    {mqtt=">[broker:io/d:command:off:OFF],>[broker:io/d:command:on:ON],<[broker:d_io_1/status:state:default]"}
+
+Switch          k_io_1          "Swiatlo"                                       <switch>        (korytarz)      {mqtt=">[broker:io/k:command:off:OFF],>[broker:io/k:command:on:ON],<[broker:k_io_1/status:state:default]"}
+
+Switch          q_io_1          "Swiatlo"                                       <switch>        (kuchnia)       {mqtt=">[broker:io/q:command:off:OFF],>[broker:io/q:command:on:ON],<[broker:q_io_1/status:state:default]"}
+
+Number          czuj_swiatla    "Czujnik swiatla [%s]"                          <light>         (balkon)        {mqtt="<[broker:czuj/b/2:state:default]"}
+
+Switch          sen             "Idz spac"                                      <bedroom>                       {mqtt=">[broker:pilot:command:off:OFF]"}
+
+Number          magnet1         "Lodowka [MAP(lodowka.map):%s]"                 <shield>        (kuchnia)       {mqtt="<[broker:czuj/q/1:state:default]" }
+
+Number          magnet2         "Zamrazarka [MAP(lodowka.map):%s]"              <shield>        (kuchnia)       {mqtt="<[broker:czuj/q/2:state:default]" }
+
+DateTime        dataczas        "Data [%1$tT %1$tA, %1$td.%1$tm.%1$tY]"         <calendar>      (All)
+
+Number          wylgodz         "Godziny [%d]"                                  <clock>         (wylacznik)
+
+Number          wylmin          "Minuty [%d]"                                   <clock>         (wylacznik)
+
+Switch          ustawspanie     "Ustaw timer"                                   <bedroom>       (wylacznik)     {mqtt=">[broker:wylacznik:command:off:OFF],>[broker:wylacznik:command:on:ON],<[broker:wylacznik:state:default]"}
+
+Switch          pilot1          "AMP"                                           <speakers>      (tv)            {mqtt=">[broker:pilot/amp:command:off:OFF],>[broker:pilot/amp:command:on:ON],<[broker:pilot/amp/status:state:default]"}
+
+Switch          pilot2          "DVB-T"                                         <dvb>           (tv)            {mqtt=">[broker:pilot/dvb:command:off:OFF],>[broker:pilot/dvb:command:on:ON],<[broker:pilot/dvb/status:state:default]"}
+
+Switch          pilot3          "TV"                                            <tv>            (tv)            {mqtt=">[broker:pilot/tv:command:off:OFF],>[broker:pilot/tv:command:on:ON],<[broker:pilot/tv/status:state:default]"}
+
+Switch          spanie1         "AMP"                                           <speakers>      (wylacznik)
+
+Switch          spanie2         "DVB-T"                                         <dvb>           (wylacznik)
+
+Switch          spanie3         "TV"                                            <tv>            (wylacznik)
+
+Switch          spanie4         "Swiatlo"                                       <switch>        (wylacznik)
+
+Number          wlgodz          "Godziny [%d]"                                  <clock>         (budzik)
+
+Number          wlmin           "Minuty [%d]"                                   <clock>         (budzik)
+
+Switch          ustawbudzik     "Ustaw pobudke"                                 <bedroom>       (budzik)        {mqtt=">[broker:budzik:command:off:OFF],>[broker:budzik:command:on:ON],<[broker:budzik:state:default]"}
+
+//Switch          pobudka1        "AMP"                                           <speakers>      (budzik)
+
+//Switch          pobudka2        "DVB-T"                                         <dvb>           (budzik)
+
+//Switch          pobudka3        "TV"                                            <tv>            (budzik)
+
+Dimmer          pilotvol        "AMP Volume"                                    <volume>        (tv)            {mqtt=">[broker:pilot/amp:command:ON:UP],>[broker:pilot/amp:command:OFF:DN]"}
+
+Number          volume          "Volume [%s %%]"                                <volume>        (tv)            {mqtt=">[broker:pilot/amp:command:*:default]"}
+
+Number          volup                                                           <volup>                         {mqtt=">[broker:pilot/amp:command:*:default]"}
+
+Number          voldn                                                           <voldn>                         {mqtt=">[broker:pilot/amp:command:*:default]"}
+
+Number          scena                                                           <scena>                         {mqtt=">[broker:scena:command:*:default]"}
+
+Switch          wschod          "Wschod Slonca"                                 <sun>           (All)           
+
+Switch          security        "Zlodziej w domu"                               <shield>        (All)

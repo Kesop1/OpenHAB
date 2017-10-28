@@ -1,0 +1,16 @@
+Sitemap Clock
+{
+Frame label="Alarm" {
+Setpoint item=alarmgodziny minValue=0 maxValue=23 step=1
+Setpoint item=alarmminuty minValue=0 maxValue=55 step=5
+Switch item=button "button"
+Text item=Date
+Switch item=itm_uber1_gas_alm_sta mappings=[OFF="Off"]
+Text item=itm_mailbox_time
+Text item=System_Time
+Text item=itm_mousetrap_basement_time
+Text item=SystemTime
+
+}
+
+}

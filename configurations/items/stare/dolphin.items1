@@ -1,0 +1,20 @@
+Group All
+
+Switch mqttsw1 "Switch 1" (all) {mqtt=">[broker:inTopic/LED:command:off:OFF],>[broker:inTopic/LED:command:on:ON],<[broker:outTopic/LED/state:state:default]"}
+
+Switch mqttsw2 "Switch 2" (all) {mqtt=">[broker:inTopic/prad:command:off:ON1],>[broker:inTopic/prad:command:on:OFF1],<[broker:outTopic/prad/state:state:default]"}
+
+Switch mqttsw3 "Switch 3" (all) {mqtt=">[broker:/testsw/2:command:off:0],>[broker:/testsw/2:command:on:1]"}
+
+Switch mqttsw4 "Switch 4" (all) {mqtt=">[broker:/testsw/2:command:off:0],>[broker:/testsw/2:command:on:1]"}
+
+Switch lamp1 "Office Lamp" (all) {mqtt=">[broker:home/openHAB/out/Light_GF_Office_Lamp/command:command:on:ON],>[broker:home/openHAB/out/Light_GF_Office_Lamp/command:command:off:OFF],<[broker:/openHAB/in/Light_GF_Office_Lamp/state:state:default"}
+
+Number Office_temp "Temperature [%.1f °C]" <sun> {mqtt="<[broker:k_czuj_1:state:default]"}
+
+Switch mqttsw5 "Switch 5" (all) {mqtt=">[broker:inTopic/LED:command:off:OFF],>[broker:inTopic/LED:command:on:ON],<[broker:inTopic/LED:state:default]"}
+
+Switch     Alarm_Master          "Master Alarm"       <presence>       (All)
+Number     Alarm_MasterTimeMins  "Master Alarm"       <clock>          (All)
+String     Alarm_MasterTime      "Master Alarm [%s]"  <clock>
+Switch     Alarm_MasterEvent     "Master Alarm Event" <alarm>          (AlarmEvents)      { autoupdate="false" }

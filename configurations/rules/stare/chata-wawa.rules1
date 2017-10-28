@@ -1,0 +1,539 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.openhab.library.tel.types.CallType
+import org.openhab.core.transform.actions.Transformation
+import org.joda.time.*
+import java.lang.Double
+import java.lang.Math.*
+import java.util.Date
+import org.openhab.core.library.types.DecimalType
+import org.openhab.action.squeezebox.*
+import java.util.concurrent.locks.ReentrantLock
+
+//timery
+var Timer timer_wyl1 = null
+
+//budzik praca
+var Timer timer_arb1 = null
+var Timer timer_arb2 = null
+var Timer timer_arb3 = null
+var Timer timer_arb4 = null
+
+var Timer timer_alr1 = null
+var Timer timer_alr2 = null
+var Timer timer_alr3 = null
+
+var Timer timer_amp1 = null
+var Timer timer_amp2 = null
+
+var Timer timer_scn1 = null
+var Timer timer_scn2 = null
+var Timer timer_scn3 = null
+
+var DateTime alarmTime = new DateTime(now)
+
+//***************************************************************************************//
+rule "Poczatek"
+ when
+   System started
+ then
+     postUpdate(wylgodz, 1)
+     postUpdate(wylmin, 0)
+     postUpdate(wlgodz, 8)
+     postUpdate(wlmin, 20)
+     postUpdate(wlgodz_praca, 7)
+     postUpdate(wlmin_praca, 15)
+     postUpdate(wylczas, "-")
+     postUpdate(wlczas, "-")
+     postUpdate(wlczas_praca, "-")
+     postUpdate(wolne, OFF)
+ end
+
+
+//**************************************************************************************//
+
+
+//**************************************************************************************//
+rule "wylaczanie"
+when
+Item ustawspanie received command ON
+then
+var int czaswyl
+czaswyl = (wylgodz.state as DecimalType).intValue * 60 + (wylmin.state as DecimalType).intValue
+czaswyl = czaswyl.intValue
+alarmTime = new DateTime(now.plusMinutes(czaswyl))
+
+//jesli timer juz istnieje to go nadpisz
+if (timer_wyl1 != null) {
+timer_wyl1.cancel
+timer_wyl1 = null
+}
+
+//wartosc inicjalna dla update'u
+postUpdate(wylczas, czaswyl)
+
+
+logInfo("Wylaczanie","Wylaczanie ustawione na za " + czaswyl + " minut")
+
+timer_wyl1 = createTimer(now.plusMinutes(czaswyl))[|
+
+logInfo("Wylaczanie","    Wylaczanie teraz!!!!!")
+//wyslij komende OFF dla nadajnika IR
+sendCommand(scena, 1)
+
+if (spij_tv.state==ON){
+sendCommand(but_tv, OFF)
+}
+
+sendCommand(but_pc, OFF)
+sendCommand(ustawspanie, OFF)
+]
+end
+
+//**************************************************************************************//
+rule "zeruj wylaczanie"
+when
+Item ustawspanie received command OFF
+then
+if (timer_wyl1 != null) {
+timer_wyl1.cancel
+timer_wyl1 = null
+}
+postUpdate(wylczas, "-")
+end
+
+//**************************************************************************************//
+rule "budzik praca"
+when
+Item budzik1_praca received command ON
+then
+var int czaswl
+czaswl = (wlgodz_praca.state as DecimalType).intValue * 60 + (wlmin_praca.state as DecimalType).intValue
+czaswl = czaswl.intValue
+
+//okresl ile minut jest juz tego dnia
+var int terazczas
+terazczas = now.getMinuteOfDay
+terazczas = terazczas.intValue
+
+var int alarm
+alarm = czaswl - terazczas
+
+//jesli ustawiono na dzien nastepny
+if (alarm <0){
+alarm = alarm + 1440
+}
+
+//jesli timer juz isnieje to nadpisz
+if (timer_arb1 != null) {
+timer_arb1.cancel
+timer_arb1 = null
+}
+
+//update godziny na stronce
+var String alarm_godz = wlgodz_praca.state.format("%d")
+var String alarm_min = wlmin_praca.state.format("%d")
+if (wlmin_praca.state < 10){
+alarm_min="0" + alarm_min
+}
+if (wlgodz_praca.state<10){
+alarm_godz = "0" + alarm_godz
+}
+postUpdate(wlacz_praca,alarm_godz + ":" + alarm_min)
+logInfo("Budzik praca","Pobudka do tyry ustawiona na " + alarm_godz + ":" + alarm_min )
+
+//timer
+timer_arb1 = createTimer(now.plusMinutes(alarm))[|
+var int dow = now.getDayOfWeek
+dow = dow.intValue
+if(dow>5 || wolne.state==ON){
+logInfo("Budzik praca","Dzis nie ma pracy" )
+postUpdate(budzik_praca, OFF)
+postUpdate(wolne, OFF)
+timer_arb2 = createTimer(now.plusMinutes(2))[|
+postUpdate(budzik_praca, ON)
+]
+}
+
+else{
+logInfo("Budzik praca","Pobudka do pracy")
+postUpdate(scena, 2)
+
+if (timer_arb4 != null) {
+timer_arb4.cancel
+timer_arb4 = null
+}
+
+if(pcON.state==ON){
+sendCommand(but_pc, ON)
+}
+
+//wlacz wybrana stacje radiowa
+timer_arb4 = createTimer(now.plusSeconds(8))[|
+sendCommand(radio_stacja, radio_praca.state)
+]
+
+if (timer_arb3 != null) {
+timer_arb3.cancel
+timer_arb3 = null
+}
+
+//wlacz lampke gdy jest ciemno i zglosnij radio
+timer_arb3 = createTimer(now.plusSeconds(60))[|
+if(wschod.state==OFF){
+//wlacz lampke////////////////////////////////////////////sendCommand(LED, OFF)
+}
+sendCommand(volume, 5)
+]
+
+
+//daj update wartosci wylacznika
+     postUpdate(wylgodz, 1)
+     postUpdate(wylmin, 0)
+}
+]
+end
+
+
+//**************************************************************************************//
+rule "Anuluj budzik praca"
+when
+Item budzik1_praca received command OFF
+then
+postUpdate(wlacz_praca,"-")
+if (timer_arb1 != null) {
+timer_arb1.cancel
+timer_arb1 = null
+logInfo("Budzik praca","Alarm budzika do pracy wylaczony")
+}
+end
+
+//**************************************************************************************//
+rule "ustaw minuty do alarmu praca 0"
+when
+Item setminutes_praca received command 0
+then
+postUpdate(wlmin_praca, 0)
+end
+
+//**************************************************************************************//
+rule "ustaw minuty do alarmu praca 15"
+when
+Item setminutes_praca received command 15
+then
+postUpdate(wlmin_praca, 15)
+end
+
+//**************************************************************************************//
+rule "ustaw minuty do alarmu praca 30"
+when
+Item setminutes_praca received command 30
+then
+postUpdate(wlmin_praca, 30)
+end
+
+//**************************************************************************************//
+rule "ustaw minuty do alarmu praca 45"
+when
+Item setminutes_praca received command 45
+then
+postUpdate(wlmin_praca, 45)
+end
+
+
+
+
+//**************************************************************************************//
+rule "budzik"
+when
+Item budzik1 received command ON
+then
+var int czaswl
+czaswl = (wlgodz.state as DecimalType).intValue * 60 + (wlmin.state as DecimalType).intValue
+czaswl = czaswl.intValue
+
+//okresl ile minut jest juz tego dnia
+var int terazczas
+terazczas = now.getMinuteOfDay
+terazczas = terazczas.intValue
+
+var int alarm
+alarm = czaswl - terazczas
+
+//jesli ustawiono na dzien nastepny
+if (alarm <0){
+alarm = alarm + 1440
+}
+
+//jesli timer juz isnieje to nadpisz
+if (timer_alr1 != null) {
+timer_alr1.cancel
+timer_alr1 = null
+}
+
+//update godziny na stronce
+var String alarm_godz = wlgodz.state.format("%d")
+var String alarm_min = wlmin.state.format("%d")
+if (wlmin.state < 10){
+alarm_min="0" + alarm_min
+}
+if (wlgodz.state<10){
+alarm_godz = "0" + alarm_godz
+}
+postUpdate(wlczas,alarm_godz + ":" + alarm_min)
+logInfo("Budzik","Pobudka ustawiona na " + alarm_godz + ":" + alarm_min )
+
+//timer
+timer_alr1 = createTimer(now.plusMinutes(alarm))[|
+logInfo("Budzik","Pobudka")
+postUpdate(scena, 2)
+
+if (timer_alr2 != null) {
+timer_alr2.cancel
+timer_alr2 = null
+}
+
+if(pcON.state==ON){
+sendCommand(but_pc, ON)
+}
+
+//wlacz wybrana stacje radiowa
+timer_alr2 = createTimer(now.plusSeconds(8))[|
+sendCommand(radio_stacja, radio_budzik.state)
+]
+
+if (timer_alr3 != null) {
+timer_alr3.cancel
+timer_alr3 = null
+}
+
+
+//wlacz lampke gdy jest ciemno i zglosnij radio
+timer_alr3 = createTimer(now.plusSeconds(60))[|
+if(wschod.state==OFF){
+//wlacz lampke////////////////////////////////////////////sendCommand(LED, OFF)
+}
+sendCommand(volume, 5)
+]
+
+
+//daj update wartosci wylacznika
+     postUpdate(wylgodz, 1)
+     postUpdate(wylmin, 0)
+     postUpdate(wlgodz, 8)
+     postUpdate(wlmin, 20)
+     postUpdate(wlczas,"-")
+
+}
+]
+end
+
+
+//**************************************************************************************//
+rule "Anuluj budzik"
+when
+Item budzik1 received command OFF
+then
+postUpdate(wlczas,"-")
+if (timer_alr1 != null) {
+timer_alr1.cancel
+timer_alr1 = null
+logInfo("Budzik","Alarm budzika wylaczony")
+}
+end
+
+
+//*******************************************************************//
+rule "Wolne"
+when
+Item wschod received update
+then
+var int doy = now.getDayOfYear
+doy = doy.intValue
+if((doy==107)||(doy==121)||(doy==123)||(doy==166)||(doy==227)||(doy==305)||(doy==359)||(doy==360)){
+sendCommand(wolne, ON)
+}
+end
+
+//**********************************************************************************//
+rule "Sceny"
+when
+Item scena received update
+then
+
+//scena 1=pawsinoga, wszystko OFF
+if(scena.state==1){
+logInfo("Scena","Ustawiono scene nr 1 - pawsinoga")
+sendCommand(lis_lcd, OFF)
+sendCommand(lis_speak, OFF)
+sendCommand(amp, OFF)
+sendCommand(but_pc, OFF)
+//sendCommand(buttons, "UP")
+//sendCommand(led, OFF)
+}
+
+//scena 2=meloman, wszystko OFF poza AMP i subwooferem
+if(scena.state==2){
+logInfo("Scena","Ustawiono scene nr 2 - meloman")
+sendCommand(lis_lcd, OFF)
+sendCommand(lis_speak, OFF)
+sendCommand(amp, ON)
+timer_scn1 = createTimer(now.plusSeconds(5))[|
+sendCommand(pilot_amp, "SCENE4")
+]
+}
+
+//scena 3=pececiarz, wlacz monitor i glosniki PC
+if(scena.state==3){
+logInfo("Scena","Ustawiono scene nr 3 - pececiarz")
+sendCommand(lis_lcd, ON)
+sendCommand(lis_speak, ON)
+//sendCommand(buttons, "LE")
+}
+
+//scena 4=mecz, 
+if(scena.state==4){
+logInfo("Scena","Ustawiono scene nr 4 - mecz")
+sendCommand(amp, ON)
+sendCommand(lis_lcd, OFF)
+sendCommand(lis_speak, OFF)
+sendCommand(pilot_amp, "TV")
+timer_scn2 = createTimer(now.plusSeconds(2))[|
+sendCommand(pilot_amp, "SCENE2")
+sendCommand(audriosrc, "PCAMP")
+//sendCommand(buttons, "RI")
+//button zmien audio source na pc
+var i = 1
+while ((i=i+1) < 5) {
+timer_scn3 = createTimer(now.plusSeconds(1))[|
+sendCommand(pilot_amp, "AUDIOSRC")
+]
+}
+]
+//sendCommand(led, ON)
+}
+//scena 5=film, 
+if(scena.state==5){
+logInfo("Scena","Ustawiono scene nr 5 - film")
+sendCommand(amp, ON)
+sendCommand(lis_lcd, OFF)
+sendCommand(lis_speak, OFF)
+sendCommand(pilot_amp, "TV")
+timer_scn2 = createTimer(now.plusSeconds(2))[|
+sendCommand(pilot_amp, "SCENE2")
+sendCommand(audriosrc, "PCAMP")
+//sendCommand(buttons, "RI")
+var i = 1
+while ((i=i+1) < 5) {
+timer_scn3 = createTimer(now.plusSeconds(1))[|
+sendCommand(pilot_amp, "AUDIOSRC")
+]
+}
+]
+//sendCommand(led, ON)
+}
+
+//scena 6=ksiazka, 
+if(scena.state==6){
+logInfo("Scena","Ustawiono scene nr 6 - ksiazka")
+sendCommand(amp, ON)
+sendCommand(lis_lcd, OFF)
+sendCommand(lis_speak, OFF)
+//sendCommand(led, ON)
+}
+
+//scena 7=TV, 
+if(scena.state==7){
+logInfo("Scena","Ustawiono scene nr 7 - TV")
+sendCommand(amp, ON)
+sendCommand(lis_lcd, OFF)
+sendCommand(lis_speak, OFF)
+sendCommand(pilot_amp, "TV")
+timer_scn3 = createTimer(now.plusSeconds(2))[|
+sendCommand(pilot_amp, "SCENE3")
+]
+//sendCommand(led, ON)
+}
+
+end
+
+
+//*******************************************************************//
+rule "Amp"
+when
+Item amp received update
+then
+if(amp.state==OFF){
+sendCommand(pilot_amp,"OFF")
+timer_amp1 = createTimer(now.plusSeconds(1))[|
+sendCommand(lis_amp, OFF)
+sendCommand(lis_sub, OFF)
+]
+}
+else{
+sendCommand(lis_amp, ON)
+sendCommand(lis_sub, ON)
+timer_amp2 = createTimer(now.plusSeconds(3))[|
+sendCommand(pilot_amp, "ON")
+]
+}
+end
+
+//*******************************************************************//
+rule "Pilot"
+when
+Item pilot_rcv received update
+then
+if(pilot_rcv.state==1){ //pawsinoga
+logInfo("Pilot","Pilot 1")
+postUpdate(scena, 1)
+}
+else if(pilot_rcv.state==2){//meloman
+logInfo("Pilot","Pilot 2")
+postUpdate(scena, 2)
+}
+else if(pilot_rcv.state==3){//pececiarz
+logInfo("Pilot","Pilot 3")
+postUpdate(scena, 3)
+}
+else if(pilot_rcv.state==4){//mecz
+logInfo("Pilot","Pilot 4")
+postUpdate(scena, 4)
+}
+else if(pilot_rcv.state==5){//film
+logInfo("Pilot","Pilot 5")
+postUpdate(scena, 5)
+}
+else if(pilot_rcv.state==6){//ksiazka
+logInfo("Pilot","Pilot 6")
+postUpdate(scena, 6)
+}
+else if(pilot_rcv.state==7){//tv
+logInfo("Pilot","Pilot 7")
+postUpdate(scena, 7)
+}
+else if(pilot_rcv.state==8){
+logInfo("Pilot","Pilot 8")
+}
+else if(pilot_rcv.state==9){
+logInfo("Pilot","Pilot 9")
+}
+else if(pilot_rcv.state==0){
+logInfo("Pilot","Pilot 0")
+     postUpdate(wylgodz, 1)
+     postUpdate(wylmin, 0)
+     sendCommand(ustawspanie, ON)
+}
+//czyli SCENE4 wcisniete na pilocie, jesli jest wylaczony AMP, to wlaczy listwe i subwoofer
+else if(pilot_rcv.state==10){
+logInfo("Pilot","Pilot 10")
+sendCommand(amp, ON)
+timer_amp2 = createTimer(now.plusSeconds(3))[|
+sendCommand(pilot_amp, "SCENE4")
+]
+
+} 
+
+end
+

@@ -1,0 +1,32 @@
+//czujniki
+Number          czuj_temp       "Temperatura [%s °C]"                          <temperature>   (All)		{mqtt="<[broker:czuj/temp:state:default]"}
+
+Number          czuj_wilg       "Wilgotnosc [%s %%]"                            <water>         (All)           {mqtt="<[broker:czuj/wilg:state:default]"}
+
+Switch          czuj                                                                                            {mqtt=">[broker:czuj:command:*:default]"}
+
+
+//data i czas
+DateTime        dataczas        "Data [%1$tT %1$tA, %1$td.%1$tm.%1$tY]"         <calendar>      (All)
+
+Switch          wschod          "Wschod Slonca"                                 <sun>           (All)
+
+Number          scena                                                           <scena>         (All)
+
+
+//amplituner
+Number          radio_stacja                                                    <scena>         (All)           
+
+Switch          amp
+
+Number          audiosrc                                                                        (buttons)       
+
+Switch		audio_src
+
+String		send_audio											{mqtt=">[broker:pcCMD:command:*:default]"}
+
+String		change_radio											{mqtt=">[broker:pilot/amp:command:*:default]"}
+
+//logger
+String		logger												{mqtt=">[broker:logger:command:*:default]"}
+

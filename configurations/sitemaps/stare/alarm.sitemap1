@@ -1,0 +1,27 @@
+sitemap alarmclock
+{
+    Frame label="System" {
+
+        Text label="Wecker [%s]" item=weckerZeitMessage icon="clock" {
+            Frame label="Zeit" {
+                Setpoint item=weckerZeitStunde minValue=0 maxValue=23 step=1
+                Setpoint item=weckerZeitMinute minValue=0 maxValue=55 step=5
+            }
+            Frame label="Wochentage" {
+                Switch item=weckerMontag
+                Switch item=weckerDienstag
+                Switch item=weckerMittwoch
+                Switch item=weckerDonnerstag
+                Switch item=weckerFreitag
+                Switch item=weckerSamstag
+                Switch item=weckerSonntag
+            }
+Frame label="Alarm" {
+Setpoint item=alarmgodziny minValue=0 maxValue=23 step=1
+Setpoint item=alarmminuty minValue=0 maxValue=55 step=5
+Text item=Fibaro_Motion_1_LastUpdate valuecolor=[>6000="red",>600="orange",<=600="green"]
+}
+        
+    }   
+}
+}

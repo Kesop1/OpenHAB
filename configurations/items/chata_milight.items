@@ -1,0 +1,6 @@
+Dimmer DiscoMode                {milight="iBox:5:discoMode"}
+Dimmer DiscoSpeed               {milight="iBox:5:discoSpeed"}
+Switch Light_Groundfloor        {milight="iBox;0"}
+Color Light_Party                       {milight="iBox;5;rgb"}
+Switch          lampka          {milight="iBox:0"}
+

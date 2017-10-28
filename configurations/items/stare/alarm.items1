@@ -1,0 +1,17 @@
+Switch  weckerMontag     "Montag"     <switch>  (gWeckerWochentage) 
+Switch  weckerDienstag   "Dienstag"   <switch>  (gWeckerWochentage) 
+Switch  weckerMittwoch   "Mittwoch"   <switch>  (gWeckerWochentage) 
+Switch  weckerDonnerstag "Donnerstag" <switch>  (gWeckerWochentage) 
+Switch  weckerFreitag    "Freitag"    <switch>  (gWeckerWochentage) 
+Switch  weckerSamstag    "Samstag"    <switch>  (gWeckerWochentage) 
+Switch  weckerSonntag    "Sonntag"    <switch>  (gWeckerWochentage) 
+
+String weckerZeitMessage "%s"
+
+Number weckerZeitStunde "Stunde [%d]" <clock> (gWeckerZeit)
+Number weckerZeitMinute "Minute [%d]" <clock> (gWeckerZeit)
+
+Number alarmgodziny "Godziny [%d]" <clock> (alarm)
+Number alarmminuty  "Minuty [%d]"  <clock> (alarm)
+
+DateTime Fibaro_Motion_1_LastUpdate     "Last seen [%1$ta %1$tR]" <clock>
